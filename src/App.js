@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import Header from "./Header";
+import CreateNew from "./CreateNew";
+import { Routes, Route } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function App() {
+  const [ownerList, setOwnerList] = useState([]);
+  const [itemList, setItemList] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:9292/items")
+      .then((r) => r.json())
+      .then((data) => setItemList(data));
+  }, []);
+  useEffect(() => {
+    fetch("http://localhost:9292/owners")
+      .then((r) => r.json())
+      .then((data) => setOwnerList(data));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header />
+      <CreateNew
+        ownerList={ownerList}
+        updateOwnerList={(newList) => setOwnerList(newList)}
+        itemList={itemList}
+        updateItemList={(newList) => setItemList(newList)}
+      />
     </div>
   );
 }
